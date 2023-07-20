@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head></head>
+  <body>
+    <form id="fileForm" enctype="multipart/form-data">
+      <input type="file" name="file" id="fileInput" accept="image/jpeg" />
+      <button type="submit">Processar</button>
+    </form>
+
+    <script>
+      const fileForm = document.getElementById("fileForm");
+      fileForm.addEventListener("submit", function (event) {
+        event.preventDefault();
+
+        const fileInput = document.getElementById("fileInput");
+        const file = fileInput.files[0];
+
+        if (file) {
+          const reader = new FileReader();
+          reader.readAsDataURL(file);
+          reader.onload = function (e) {
+            const body = {
+              b64img: e.target.result,
+            };
+            const config = {
+              method: "POST",
+              body: JSON.stringify(body),
+            };
+            fetch(`http://localhost:3000/upload-file`, config).catch(
+              (err) => err
+            );
+          };
+        }
+      });
+    </script>
+  </body>
+</html>
